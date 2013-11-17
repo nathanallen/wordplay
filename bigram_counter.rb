@@ -1,25 +1,34 @@
-a = []	# array of text
-b = []	# bigrams of array a
+# use default file unless user specifies something else
+file_name = ARGV.first || 'input.txt'
 
-a = File.read("input.txt").scan(PATT= /\w+/)
+# basic regex patterns
+word_pattern = /\w+/
+bigram_pattern = /\w+ \w+/
 
-#the bigram-loop pairs neighboring words
-i1, i2 = 0, 1
-while i2 < a.length - 1
-	i2 = i1 + 1
-	b.push("#{a[i1]} #{a[i2]}")
-	i1 += 1
-end
-b.sort
+# read in text file
+text = File.read(file_name).downcase
 
-c = b.uniq   # unique bigrams from array b
-h = Hash.new
+# offset text by one word
+offset_text = text.match(word_pattern).post_match	
 
-#counts occurrences of bigrams
-c.each {|hash| 	key = b.count hash
-		h[hash] = key		}
+# find all pairs, sort alphabetically
+even_pairs = text.scan(bigram_pattern)
+odd_pairs = offset_text.scan(bigram_pattern)
+all_pairs = (even_pairs + odd_pairs).sort
 
-#sorts hash by bigram frequency # how high to low?
-h = h.sort_by() {|k, v| v}
+# find unique pairs
+bigrams = all_pairs.uniq
 
-p h
+# count frequency of pairs, sort by frequency descending
+bigram_frequency_hash = {}
+
+bigrams.each do |bigram|
+	p bigram
+	bigram_frequency_hash[bigram] = all_pairs.count(bigram)
+end.sort_by {|k, v| v}.reverse
+
+# return ten most frequent pairs
+p bigram_frequency_hash.take(10)
+
+
+# h = h.sort_by() {|k, v| v}
