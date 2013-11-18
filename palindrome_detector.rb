@@ -1,9 +1,11 @@
-def palindrome?(input)
-  cannonical_word = input.downcase.chomp.gsub(/\W/,"")
-  cannonical_word == cannonical_word.reverse
-end  
+class String
+  def palindrome?
+    cannonical_word = self.downcase.chomp.gsub(/\W/,"")
+    cannonical_word == cannonical_word.reverse
+  end  
+end
 
 user_input = ARGV.first || gets
-result = palindrome?(user_input)
+result = user_input.palindrome?
 
 p result
