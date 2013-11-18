@@ -1,30 +1,9 @@
-class Palindrome
+def palindrome?(input)
+  cannonical_word = input.downcase.chomp.gsub(/\W/,"")
+  cannonical_word == cannonical_word.reverse
+end  
 
-	def initialize ( input )
-		$input = input.chomp
-		@input = input.downcase.chomp.gsub(/\W/, "") 
-		#makes string lowercase, removes line break and nonword chars
-	end
+user_input = ARGV.first || gets
+result = palindrome?(user_input)
 
-	def palindrome?
-		if @input == @input.reverse
-			puts "Success!\"#{$input.chomp}\" is a palindrome!"
-			true
-		else
-			puts "Sorry, that's not a palindrome."
-			puts "Try again!"
-			false
-		end
-	end	
-
-end
-
-while true
-	puts "Insert some text and I'll tell you if it's a palindrome"
-	text = Palindrome.new ( gets )
-
-	if
-		text.palindrome?
-		break
-	end
-end
+p result
