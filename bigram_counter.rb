@@ -1,25 +1,28 @@
-# basic regex pattern
-word_pattern = /[\w\-\']+/
+WORD_PATTERN = /[\w\-\']+/
 
-# read in text file and make array of individual words
-file_name = ARGV.first || 'input.txt'
-words = File.read(file_name).scan(word_pattern)
+def count_bigrams(file)
+  words = File.read(file).scan(WORD_PATTERN)
+  hash = {}
+  stop_index = words.length-1
 
-all_pairs = {}
-stop_index = words.length-1
-
-words.each_index do |i|
-  unless i == stop_index
-  	bigram = [words[i], words[i+1]].join(' ')
-  	if all_pairs[bigram]
-  	  all_pairs[bigram] += 1
-  	else
-  	  all_pairs[bigram] = 1
-  	end
+  words.each_index do |i|
+    unless i == stop_index
+      bigram = [words[i], words[i+1]].join(' ')
+      if hash[bigram]
+        hash[bigram] += 1
+      else
+        hash[bigram] = 1
+      end
+    end
   end
+
+  hash
 end
 
-bigram_frequencies = all_pairs.sort_by {|k, v| v}.reverse
+# Driver Code
+file_name = ARGV.first || 'input.txt'
+bigram_frequencies = count_bigrams(file_name)
+top_ten_bigrams = bigram_frequencies.sort_by {|k, v| v}.reverse.take(10)
 
-# return ten most frequent pairs
-p bigram_frequencies.take(10)
+p top_ten_bigrams
+
