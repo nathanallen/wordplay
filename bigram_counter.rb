@@ -1,10 +1,10 @@
-# read in text file
+# read in text file and filter it for non-word characters
 file_name = ARGV.first || 'input.txt'
-text = File.read(file_name).downcase
+text = File.read(file_name).gsub(/[^\w\-\']/i, " ")
 
-# basic regex patterns (these need to be more precise)
-word_pattern = /[a-z]+/
-bigram_pattern = /[a-z]+ [a-z]+/
+# basic regex patterns
+word_pattern = /[\w\-\']+/
+bigram_pattern = /[\w\-\']+\s+[\w\-\']+/
 
 # find even pairs
 even_pairs = text.scan(bigram_pattern)
