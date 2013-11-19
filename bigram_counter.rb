@@ -1,17 +1,18 @@
 WORD_PATTERN = /[\w\-\']+/
 
-def count_bigrams(file)
+def count_ngrams(file, n = 3)
   words = File.read(file).scan(WORD_PATTERN)
+  stop_index = words.length - n+1
+  offset = n-1
   hash = {}
-  stop_index = words.length-1
 
   words.each_index do |i|
-    unless i == stop_index
-      bigram = words[i..i+1].join(' ')
-      if hash[bigram]
-        hash[bigram] += 1
+    unless i >= stop_index
+      trigram = words[i..i+offset].join(' ')
+      if hash[trigram]
+        hash[trigram] += 1
       else
-        hash[bigram] = 1
+        hash[trigram] = 1
       end
     end
   end
@@ -20,9 +21,10 @@ def count_bigrams(file)
 end
 
 # Driver Code
-file_name = ARGV.first || 'input.txt'
-bigram_frequencies = count_bigrams(file_name)
-top_ten_bigrams = bigram_frequencies.sort_by {|k, v| v}.reverse.take(10)
+file_name = ARGV[0] || 'input.txt'
+number_of_sequential_words = ARGV[1].to_i
+ngram_frequencies = count_ngrams(file_name, number_of_sequential_words)
+top_ten_ngrams = ngram_frequencies.sort_by {|k, v| v}.reverse.take(10)
 
-p top_ten_bigrams
+p top_ten_ngrams
 
