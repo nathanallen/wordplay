@@ -8,30 +8,6 @@ NUM_WORDS = {
 }
 
 class Integer
-  def length
-    to_s.length
-  end
-
-  def powers_of_ten
-    length - 1
-  end
-
-  def unit
-    (10**self.powers_of_ten)
-  end
-
-  def first
-    to_s[0].to_i
-  end
-
-  def something
-    self.first * self.unit
-  end
-
-  def remainder
-    modulo(self.something)
-  end
-
   def to_a
     to_s.chars.map { |n| n.to_i }
   end
@@ -47,41 +23,48 @@ class Integer
 end
 
 
-# def in_words(n)
-#   output = []
-#   n_array = n.three_by_three
-#   while n_array
-#     current_chunk = n_array.slice!(0)
-#     p current_chunk
-#     case num = current_chunk.join.to_i
-#       when 0..20
-#         output << NUM_WORDS[num]
-#       when 21...100
-#         output << NUM_WORDS[num.something]
-#         output << NUM_WORDS[num.remainder]
-#       when 100...1_000_000_000_000_000
-#         output << NUM_WORDS[num.first]
-#         output << NUM_WORDS[num.something]
-#         output << NUM_WORDS[num%num.something]
-#     end
-#   end
+def in_words(n)
+  output = []
+  n_array = n.three_by_three
+  while n_array.length > 0
+    unit = nil
+    unit = NUM_WORDS[10**(n_array.length+1)] unless n_array.length == 1
+    current_chunk = n_array.slice!(0)
+    if current_chunk[-3] != nil && current_chunk[-3] != 0
+# p "1st"
+      output << NUM_WORDS[current_chunk[-3]]
+      output << NUM_WORDS[100]
+    end
+    if current_chunk[-2] == (1 || 2) 
+# p "2nd"
+      output << NUM_WORDS[current_chunk[-2..-1].join.to_i]
+    elsif current_chunk[-2] != nil && current_chunk[-2] >= 2 
+# p "3rd"
+      output << NUM_WORDS[current_chunk[-2]*10]
+      output << NUM_WORDS[current_chunk[-1]] unless current_chunk[-1] == 0
+    elsif current_chunk[-1] != nil
+# p "4th"
+      output << NUM_WORDS[current_chunk[-1]] unless current_chunk[-1] == 0
+    end
+      output << unit if unit
+  end
+#p output
+return output.join(' ')
+end
 
-# return output.join(' ')
-# end
-
-# puts in_words(0) == "zero"
-# puts in_words(1) == "one"
-# puts in_words(10) == "ten"
-# puts in_words(19) == "nineteen"
-# puts in_words(20) == "twenty"
-# puts in_words(21) == "twenty one"
-# puts in_words(100) #== "one hundred"
-# puts in_words(101) == "one hundred one"
-# puts in_words(110) == "one hundred ten"
-# puts in_words(1000) #== "one thousand"
-# puts in_words(10000) #== "ten thousand"
-# # puts in_words(11101) #== "eleven thousand one hundred one"
-# # puts in_words(100000) #== "one hundred thousand"
+puts in_words(0) == "zero"
+puts in_words(1) == "one"
+puts in_words(10) == "ten"
+puts in_words(19) == "nineteen"
+puts in_words(20) == "twenty"
+puts in_words(21) == "twenty one"
+puts in_words(100) == "one hundred"
+puts in_words(101) == "one hundred one"
+puts in_words(110) == "one hundred ten"
+puts in_words(1000) == "one thousand"
+puts in_words(10000) == "ten thousand"
+puts in_words(11101) == "eleven thousand one hundred one"
+puts in_words(100000) == "one hundred thousand"
 
 
 __END__
