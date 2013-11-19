@@ -18,10 +18,9 @@ all_pairs = even_pairs + odd_pairs
 bigrams = all_pairs.sort.uniq
 
 # count frequency of pairs and sort by frequency descending
-bigram_frequency_hash = {}
-bigrams.each do |bigram|
-  bigram_frequency_hash[bigram] = all_pairs.count(bigram)
+bigram_frequencies = bigrams.map do |bigram|
+  [bigram, all_pairs.count(bigram)]
 end.sort_by {|k, v| v}.reverse
 
 # return ten most frequent pairs
-p bigram_frequency_hash.take(10)
+p bigram_frequencies.take(10)
