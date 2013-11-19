@@ -1,26 +1,25 @@
-# read in text file and filter it for non-word characters
-file_name = ARGV.first || 'input.txt'
-text = File.read(file_name).gsub(/[^\w\-\']/i, " ")
-
-# basic regex patterns
+# basic regex pattern
 word_pattern = /[\w\-\']+/
-bigram_pattern = /[\w\-\']+\s+[\w\-\']+/
 
-# find even pairs
-even_pairs = text.scan(bigram_pattern)
+# read in text file and make array of individual words
+file_name = ARGV.first || 'input.txt'
+words = File.read(file_name).scan(word_pattern)
 
-# find odd pairs
-offset_text = text.match(word_pattern).post_match	
-odd_pairs = offset_text.scan(bigram_pattern)
+all_pairs = {}
+stop_index = words.length-1
 
-# find unique pairs
-all_pairs = even_pairs + odd_pairs
-bigrams = all_pairs.sort.uniq
+words.each_index do |i|
+  unless i == stop_index
+  	bigram = [words[i], words[i+1]].join(' ')
+  	if all_pairs[bigram]
+  	  all_pairs[bigram] += 1
+  	else
+  	  all_pairs[bigram] = 1
+  	end
+  end
+end
 
-# count frequency of pairs and sort by frequency descending
-bigram_frequencies = bigrams.map do |bigram|
-  [bigram, all_pairs.count(bigram)]
-end.sort_by {|k, v| v}.reverse
+bigram_frequencies = all_pairs.sort_by {|k, v| v}.reverse
 
 # return ten most frequent pairs
 p bigram_frequencies.take(10)
