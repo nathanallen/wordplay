@@ -7,7 +7,7 @@ def count_bigrams(file)
 
   words.each_index do |i|
     unless i == stop_index
-      bigram = [words[i], words[i+1]].join(' ')
+      bigram = words[i..i+1].join(' ')
       if hash[bigram]
         hash[bigram] += 1
       else
