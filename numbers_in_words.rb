@@ -31,7 +31,9 @@ def in_words(n)
       words << NUM_WORDS[teens]
     elsif (2..9).include?(tens_place)
       words << NUM_WORDS[tens_place*10]
-      words << NUM_WORDS[ones_place] unless ones_place == 0
+      if ones_place != 0
+        words[-1] += "-" + NUM_WORDS[ones_place]
+      end
     elsif (1..9).include?(ones_place)
       words << NUM_WORDS[ones_place]
     end
@@ -71,7 +73,7 @@ puts in_words(1) == "one"
 puts in_words(10) == "ten"
 puts in_words(19) == "nineteen"
 puts in_words(20) == "twenty"
-puts in_words(21) == "twenty one"
+puts in_words(21) == "twenty-one"
 puts in_words(100) == "one hundred"
 puts in_words(101) == "one hundred and one"
 puts in_words(110) == "one hundred ten"
