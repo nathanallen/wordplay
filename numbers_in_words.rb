@@ -51,12 +51,10 @@ class Integer
   end
 
   def to_delimited_array
-    nums = self.to_a
-    length_of_first_set = nums.length%3
+    nums = self.to_a.reverse
     a = []
-    a << nums.slice!(0,length_of_first_set) if length_of_first_set != 0
-    a << nums.slice!(0,3) while nums.length > 0
-    a
+    a << nums.slice!(0,3).reverse while nums.length > 0
+    a.reverse
   end
 end
 
