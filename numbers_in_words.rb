@@ -62,6 +62,8 @@ def calculate_unit(delimited_array)
  10**((delimited_array.length-1)*3) unless delimited_array.length == 1
 end
 
+puts in_words(ARGV.first.to_i)
+
 __END__
 #Test code:
 puts in_words(0) == "zero"
