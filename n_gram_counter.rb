@@ -8,11 +8,11 @@ def count_ngrams(file, n = 3)
 
   words.each_index do |i|
     unless i >= stop_index
-      trigram = words[i..i+offset].join(' ')
-      if hash[trigram]
-        hash[trigram] += 1
+      ngram = words[i..i+offset].join(' ')
+      if hash[ngram]
+        hash[ngram] += 1
       else
-        hash[trigram] = 1
+        hash[ngram] = 1
       end
     end
   end
