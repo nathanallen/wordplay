@@ -40,7 +40,7 @@ def in_words(n)
   end
 
   return NUM_WORDS[n] if n == 0
-  return output.join(' ')
+  return words.join(' ')
 end
 
 class Integer
