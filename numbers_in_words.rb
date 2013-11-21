@@ -8,9 +8,8 @@ NUM_WORDS = {
 }
 
 def in_words(number)
-  return NUM_WORDS[number] if number == 0
-  words = []
   a = number.to_delimited_array
+  words = []
 
   while a.length > 0
     starting_words_length = words.length
@@ -40,6 +39,7 @@ def in_words(number)
     words << NUM_WORDS[unit] if unit && starting_words_length != words.length
   end
 
+  return NUM_WORDS[number] if number == 0
   return words.join(' ')
 end
 
