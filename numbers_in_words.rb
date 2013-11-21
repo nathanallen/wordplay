@@ -17,6 +17,7 @@ def in_words(n)
     hundreds_place = nums[-3]
     tens_place = nums[-2]
     ones_place = nums[-1]
+    start_length = words.length
    
     if (1..9).include?(hundreds_place)
       words << NUM_WORDS[hundreds_place]
@@ -38,7 +39,7 @@ def in_words(n)
       words << NUM_WORDS[ones_place]
     end
 
-    words << NUM_WORDS[unit] if unit
+    words << NUM_WORDS[unit] if unit && start_length != words.length
   end
 
   return NUM_WORDS[n] if n == 0
@@ -79,6 +80,7 @@ puts in_words(1000) == "one thousand"
 puts in_words(10000) == "ten thousand"
 puts in_words(11101) == "eleven thousand one hundred and one"
 puts in_words(100000) == "one hundred thousand"
+puts in_words(1000000) == "one million"
 puts in_words(1_111_111_111) == "one billion one hundred eleven million one hundred eleven thousand one hundred eleven"
 
 puts 1.to_delimited_array == [[1]]
