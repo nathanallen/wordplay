@@ -13,13 +13,12 @@ def in_words(number)
   a = number.to_delimited_array
 
   while a.length > 0
-    unit = calculate_unit(a)
+    starting_words_length = words.length
+    unit = (10**((a.length-1)*3) unless a.length == 1) || nil
     nums = a.slice!(0)
     hundreds_place = nums[-3] || 0
     tens_place = nums[-2] || 0
     ones_place = nums[-1]
-    start_length = words.length
-   
     if hundreds_place != 0
       words << NUM_WORDS[hundreds_place]
       words << NUM_WORDS[100]
@@ -27,7 +26,6 @@ def in_words(number)
         words << "and"
       end
     end
-
     if tens_place == 1
       teens = [tens_place, ones_place].join.to_i
       words << NUM_WORDS[teens]
@@ -39,8 +37,7 @@ def in_words(number)
     elsif ones_place != 0
       words << NUM_WORDS[ones_place]
     end
-
-    words << NUM_WORDS[unit] if unit && start_length != words.length
+    words << NUM_WORDS[unit] if unit && starting_words_length != words.length
   end
 
   return words.join(' ')
