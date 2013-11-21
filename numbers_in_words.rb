@@ -7,59 +7,51 @@ NUM_WORDS = {
   1000=>"thousand", 1000000=>"million", 1000000000=>"billion", 1000000000000=>"trillion"
 }
 
-def in_words(number)
-  a = number.to_delimited_array
-  words = []
-
-  while a.length > 0
-    starting_words_length = words.length
-    unit = (10**((a.length-1)*3) unless a.length == 1) || nil
-    nums = a.slice!(0)
-    hundreds_place = nums[-3] || 0
-    tens_place = nums[-2] || 0
-    ones_place = nums[-1]
-    if hundreds_place != 0
-      words << NUM_WORDS[hundreds_place]
-      words << NUM_WORDS[100]
-      if tens_place == 0 && ones_place != 0
-        words << "and"
+def in_words(n)
+  return "zero" if n == 0
+  n_array = n.to_s.chars.map { |n| n.to_i }.reverse
+  stop_index = n_array.length - 1
+  output = []
+  i = 0
+  while i <= stop_index
+    remainder = (i+1)%3
+    n_current = n_array[i]
+    unit = (10**((i/3)*3) unless i<3) || nil
+    if remainder == 1 && unit && n_array[i..i+2].inject(:+) != 0
+      output << NUM_WORDS[unit]
+    end 
+    if remainder == 0 && n_current != 0
+      # p "hundred"
+      output << NUM_WORDS[100]
+      output << NUM_WORDS[n_current]
+    elsif remainder == 2 && (2..9).include?(n_current)
+      # p "tens"
+      output << NUM_WORDS[n_current*10]
+    elsif remainder == 2 && [1].include?(n_current)
+      # p "teeeeeens"
+      output << NUM_WORDS[n_current*10 + n_array[i-1]]
+    elsif remainder == 1 && (1..9).include?(n_current)
+      # p "ones"
+      case n_array[i+1]
+        when 0
+        output << NUM_WORDS[n_current]
+        output << "and"
+        when 2..9 
+        output << NUM_WORDS[n_current]
+        when nil
+        output << NUM_WORDS[n_current]
       end
     end
-    if tens_place == 1
-      teens = [tens_place, ones_place].join.to_i
-      words << NUM_WORDS[teens]
-    elsif tens_place != 0
-      words << NUM_WORDS[tens_place*10]
-      if ones_place != 0
-        words[-1] += "-" + NUM_WORDS[ones_place]
-      end
-    elsif ones_place != 0
-      words << NUM_WORDS[ones_place]
-    end
-    words << NUM_WORDS[unit] if unit && starting_words_length != words.length
+    i += 1
   end
 
-  return NUM_WORDS[number] if number == 0
-  return words.join(' ')
-end
-
-class Integer
-  def to_a
-    to_s.chars.map { |n| n.to_i }
-  end
-
-  def to_delimited_array
-    nums = self.to_a.reverse
-    a = []
-    a << nums.slice!(0,3).reverse while nums.length > 0
-    a.reverse
-  end
+  return output.reverse.join(' ')
 end
 
 puts in_words(ARGV.first.to_i)
 
-__END__
-#Test code:
+# __END__
+# Test code:
 puts in_words(0) == "zero"
 puts in_words(1) == "one"
 puts in_words(10) == "ten"
@@ -75,9 +67,3 @@ puts in_words(11101) == "eleven thousand one hundred and one"
 puts in_words(100000) == "one hundred thousand"
 puts in_words(1000000) == "one million"
 puts in_words(1_111_111_111) == "one billion one hundred eleven million one hundred eleven thousand one hundred eleven"
-
-puts 1.to_delimited_array == [[1]]
-puts 10.to_delimited_array == [[1,0]]
-puts 100.to_delimited_array == [[1,0,0]]
-puts 1000.to_delimited_array == [[1],[0,0,0]]
-puts 1000000.to_delimited_array == [[1],[0,0,0],[0,0,0]]
