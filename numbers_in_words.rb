@@ -8,50 +8,53 @@ NUM_WORDS = {
 }
 
 def in_words(n)
-  return "zero" if n == 0
   n_array = n.to_s.chars.map { |n| n.to_i }.reverse
   stop_index = n_array.length - 1
   output = []
   i = 0
+
   while i <= stop_index
     remainder = (i+1)%3
     n_current = n_array[i]
     unit = (10**((i/3)*3) unless i<3) || nil
+
     if remainder == 1 && unit && n_array[i..i+2].inject(:+) != 0
       output << NUM_WORDS[unit]
     end 
-    if remainder == 0 && n_current != 0
-      # p "hundred"
-      output << NUM_WORDS[100]
-      output << NUM_WORDS[n_current]
-    elsif remainder == 2 && (2..9).include?(n_current)
-      # p "tens"
-      output << NUM_WORDS[n_current*10]
-    elsif remainder == 2 && [1].include?(n_current)
-      # p "teeeeeens"
-      output << NUM_WORDS[n_current*10 + n_array[i-1]]
-    elsif remainder == 1 && (1..9).include?(n_current)
-      # p "ones"
-      case n_array[i+1]
-        when 0
-        output << NUM_WORDS[n_current]
-        output << "and"
-        when 2..9 
-        output << NUM_WORDS[n_current]
-        when nil
+
+    if n_current != 0
+      if remainder == 0
+        output << NUM_WORDS[100]
         output << NUM_WORDS[n_current]
       end
+      if remainder == 2
+        tens = n_current*10
+        tens += n_array[i-1] if n_current == 1
+        output << NUM_WORDS[tens]
+      end
+      if remainder == 1
+        next_num = n_array[i+1]
+        if (2..9).include?(next_num)
+          output << NUM_WORDS[next_num*10] + "-" + NUM_WORDS[n_current]
+          i+=1
+        elsif next_num != 1
+          output << NUM_WORDS[n_current]
+          output << "and" if next_num == 0
+        end
+      end
     end
+
     i += 1
   end
 
+  return NUM_WORDS[n] if n == 0
   return output.reverse.join(' ')
 end
 
 puts in_words(ARGV.first.to_i)
 
-# __END__
-# Test code:
+__END__
+Test code:
 puts in_words(0) == "zero"
 puts in_words(1) == "one"
 puts in_words(10) == "ten"
