@@ -7,19 +7,20 @@ NUM_WORDS = {
   1000=>"thousand", 1000000=>"million", 1000000000=>"billion", 1000000000000=>"trillion"
 }
 
-def in_words(n)
+def in_words(number)
+  return NUM_WORDS[number] if number == 0
   words = []
-  a = n.to_delimited_array
+  a = number.to_delimited_array
 
   while a.length > 0
     unit = calculate_unit(a)
     nums = a.slice!(0)
-    hundreds_place = nums[-3]
-    tens_place = nums[-2]
+    hundreds_place = nums[-3] || 0
+    tens_place = nums[-2] || 0
     ones_place = nums[-1]
     start_length = words.length
    
-    if (1..9).include?(hundreds_place)
+    if hundreds_place != 0
       words << NUM_WORDS[hundreds_place]
       words << NUM_WORDS[100]
       if tens_place == 0 && ones_place != 0
@@ -30,19 +31,18 @@ def in_words(n)
     if tens_place == 1
       teens = [tens_place, ones_place].join.to_i
       words << NUM_WORDS[teens]
-    elsif (2..9).include?(tens_place)
+    elsif tens_place != 0
       words << NUM_WORDS[tens_place*10]
       if ones_place != 0
         words[-1] += "-" + NUM_WORDS[ones_place]
       end
-    elsif (1..9).include?(ones_place)
+    elsif ones_place != 0
       words << NUM_WORDS[ones_place]
     end
 
     words << NUM_WORDS[unit] if unit && start_length != words.length
   end
 
-  return NUM_WORDS[n] if n == 0
   return words.join(' ')
 end
 
