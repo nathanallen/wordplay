@@ -4,20 +4,18 @@ def count_ngrams(file, n = 3)
   words = File.read(file).scan(WORD_PATTERN)
   stop_index = words.length - n+1
   offset = n-1
-  hash = {}
+  ngram_freqs = Hash.new(0)
 
   words.each_index do |i|
     unless i >= stop_index
       ngram = words[i..i+offset].join(' ')
-      if hash[ngram]
-        hash[ngram] += 1
-      else
-        hash[ngram] = 1
+      if ngram_freqs[ngram]
+        ngram_freqs[ngram] += 1
       end
     end
   end
 
-  hash
+  ngram_freqs
 end
 
 #Driver Code
