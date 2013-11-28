@@ -20,11 +20,16 @@ def count_ngrams(file, n = 3)
   hash
 end
 
-# Driver Code
-file_name = ARGV[0] || 'input.txt'
-number_of_sequential_words = ARGV[1].to_i
-ngram_frequencies = count_ngrams(file_name, number_of_sequential_words)
+#Driver Code
+if ARGV[1]
+  number_of_sequential_words = ARGV[1].to_i
+  file_name = ARGV[0]
+  ngram_frequencies = count_ngrams(file_name, number_of_sequential_words)
+else
+  file_name = ARGV[0] || 'input.txt'
+  ngram_frequencies = count_ngrams(file_name)
+end
+
 top_ten_ngrams = ngram_frequencies.sort_by {|k, v| v}.reverse.take(10)
 
 p top_ten_ngrams
-
