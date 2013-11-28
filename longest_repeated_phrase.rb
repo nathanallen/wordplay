@@ -36,7 +36,7 @@ def longest_repeated_phrase(words_array)
     end
   end
   sequentials.pop if sequentials.last == []
-  longest_sequence = sequentials.inject([]){|memo,a| memo = a if a.length > memo.length}
+  longest_sequence = sequentials.inject([]){|memo,a| memo = a if a.length >= memo.length}
   s_length = longest_sequence.length
   keep = []
   longest_sequence.first.each do |n|
