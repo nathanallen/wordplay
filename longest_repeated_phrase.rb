@@ -36,15 +36,27 @@ def longest_repeated_phrase(words_array)
     end
   end
   sequentials.pop if sequentials.last == []
-  longest_sequence = sequentials.inject([]){|memo,a| memo = a if a.length >= memo.length}
-  s_length = longest_sequence.length
-  keep = []
-  longest_sequence.first.each do |n|
-    if longest_sequence.last.include?(n+s_length-1)
-      keep << n
+
+  memo_length = 0
+  memo_longest_sequences = []
+
+  sequentials.each_index do |i|
+    length = sequentials[i].length
+    if length >= memo_length
+      memo_length = length
+      memo_longest_sequences << sequentials[i]
     end
   end
-  words_array[keep[0]..keep[0]+s_length-1+n_length-1].join(' ')
+
+  longest = memo_longest_sequences.last
+  length = longest.length
+  start = []
+  longest.first.each do |n|
+    if longest.last.include?(n+length-1)
+      start << n
+    end
+  end
+  words_array[start[0]..start[0]+length-1+n_length-1].join(' ')
 end
 
 #Driver Code
