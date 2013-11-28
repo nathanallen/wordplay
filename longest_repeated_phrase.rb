@@ -26,12 +26,16 @@ end
 
 def longest_repeated_phrase(words_array)
   threes = ngrams_by_index(words_array, 3)
-  whitelist = threes.reject {|k, v| v.length == 1}
-  #whitelist.inject(){|memo,hash| hash.value }
-end
-
-def reject_singles(ngrams)
-  ngrams.reject {|k, v| v.length == 1}
+  sequentials = [[]]
+  threes.each_value do |v|
+    if v.length == 1
+     sequentials << [] unless sequentials.last == []
+    else
+      sequentials.last << v
+    end
+  end
+  sequentials.pop if sequentials.last == []
+  longest_sequence = sequentials.inject([]){|memo,a| memo = a if a.length > memo.length}
 end
 
 #Driver Code
