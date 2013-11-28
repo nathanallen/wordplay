@@ -25,7 +25,8 @@ def extract_words(file)
 end
 
 def longest_repeated_phrase(words_array)
-  threes = ngrams_by_index(words_array, 3)
+  n_length = 3
+  threes = ngrams_by_index(words_array, n_length)
   sequentials = [[]]
   threes.each_value do |v|
     if v.length == 1
@@ -36,6 +37,14 @@ def longest_repeated_phrase(words_array)
   end
   sequentials.pop if sequentials.last == []
   longest_sequence = sequentials.inject([]){|memo,a| memo = a if a.length > memo.length}
+  s_length = longest_sequence.length
+  keep = []
+  longest_sequence.first.each do |n|
+    if longest_sequence.last.include?(n+s_length-1)
+      keep << n
+    end
+  end
+  words_array[keep[0]..keep[0]+s_length-1+n_length-1].join(' ')
 end
 
 #Driver Code
