@@ -8,9 +8,7 @@ def count_ngrams(words_array, n = 3)
   words_array.each_index do |i|
     unless i >= stop_index
       ngram = words_array[i..i+offset].join(' ')
-      if ngram_freqs[ngram]
-        ngram_freqs[ngram] += 1
-      end
+      ngram_freqs[ngram] += 1
     end
   end
 
