@@ -19,7 +19,7 @@ ruby shakesperian_insults.rb
 ```
 
 ###palindrome detector
-Accepts a string and returns a boolean if it is a palindrome (a word or phrase that reads the same backwards and forwards). On the command line run:
+One of the first programs I wrote in Ruby. Accepts a string and returns a boolean if it is a palindrome (a word or phrase that reads the same backwards and forwards). On the command line run:
 ```
 ruby palindrome_detector.rb "A man, a plan, a canal: Panama."
 ```
