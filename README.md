@@ -3,8 +3,6 @@ An n-gram is a sequence of words, such as a bigram (two words) or trigram (a seq
 ```
 ruby n_gram_counter.rb [filename.txt] [n]
 ```
-Known bugs:  
-- does not handle utf-8 encoded characters
 
 ###numbers in words
 Given an integer between zero and the high trillions, returns the natural language equivalent. On the command line run:
