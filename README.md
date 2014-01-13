@@ -4,6 +4,12 @@ An n-gram is a sequence of words, such as a bigram (two words) or trigram (a seq
 ruby n_gram_counter.rb [filename.txt] [n]
 ```
 
+###Markov Tweet Generator
+Given a sample file of real tweets, calculates the probability of a word following another word. Then, outputs a probable (albeit gibberish) sequence of words. On the command line run:
+```
+ruby markov_tweet_generator.rb
+```
+
 ###numbers in words
 Given an integer between zero and the high trillions, returns the natural language equivalent. On the command line run:
 ```
