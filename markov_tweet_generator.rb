@@ -1,15 +1,34 @@
-require 'CSV'
+class TweetRegurgitator
+  require 'CSV'
 
-tweets = CSV.parse(File.read('tweets.csv'))
+  attr_reader :word_p
 
-word_freqs = {}
+  def initialize(tweets_csv)
+    calculate_frequencies_from_file(tweets_csv)
+    @word_p = calculate_probabilities
+  end
 
-for i in 1..(tweets.length-1)
-  words_in_tweet = tweets[i][5].split(' ')
-  words_in_tweet.each_index do |word_index|
-  current_word = words_in_tweet[word_index]
-  next_word = words_in_tweet[word_index + 1]
+  def calculate_frequencies_from_file(tweets_csv)
+    tweet_rows = CSV.parse(File.read('tweets.csv'))
+    parse_tweets(tweet_rows)
+  end
 
+  def word_freqs
+    @word_freqs ||= {}
+  end
+
+  def parse_tweets(tweet_rows)
+    for row in 1..(tweet_rows.length-1)
+      words_in_tweet = tweet_rows[row][5].split(' ')
+      words_in_tweet.each_index do |word_index|
+        current_word = words_in_tweet[word_index]
+        next_word = words_in_tweet[word_index + 1]
+        update_word_frequency(current_word, next_word) unless next_word.nil?
+      end
+    end
+  end
+
+  def update_word_frequency(current_word, next_word)
     if word_freqs[current_word]
       if word_freqs[current_word][next_word]
         word_freqs[current_word][next_word] += 1
@@ -17,39 +36,48 @@ for i in 1..(tweets.length-1)
         word_freqs[current_word][next_word] = 1
       end
     else
-      word_freqs[current_word] = {next_word => 1} unless next_word.nil?
+      word_freqs[current_word] = {next_word => 1}
     end
   end
-end
 
-word_probabilities = word_freqs.each_value do |next_word_freqs|
-    total = next_word_freqs.values.inject(:+)
-    next_word_freqs.each_pair do |k,v|
-      next_word_freqs[k] = v.fdiv(total).round(3)
+  def calculate_probabilities
+    word_freqs.each_value do |next_word_freqs|
+        total = next_word_freqs.values.inject(:+)
+        next_word_freqs.each_pair do |k,v|
+          next_word_freqs[k] = v.fdiv(total).round(3)
+        end
     end
-end
-
-rand_key = rand(word_probabilities.keys.length)
-seed_word = word_probabilities.keys[rand_key]
-
-output = []
-output << seed_word
-
-until output[-1].nil?
-  seed_word = output[-1]
-  if word_probabilities[seed_word]
-    roll = rand(1..100).fdiv(100).round(3)
-    probability = 0
-    word_probabilities[seed_word].each_pair do |k,v|
-      probability += v
-      if probability >= roll
-        output << k
-        break
-      end
-    end
-  else
-    output << nil
   end
+
+  def random_word
+    @word_p.keys.sample
+  end
+
+  def random_percent
+    rand(0..1.0).round(3)
+  end
+
+  def next_word(seed_word, goal_v, current_v=0)
+    if word_p[seed_word]
+      word_p[seed_word].select do |word,v|
+        current_v += v      
+        word if current_v >= goal_v #
+      end.first.first
+    end
+  end
+
+  def generate_tweet
+    tweet = chain_together_words(random_word)
+  end
+
+  def chain_together_words(*words)
+    until words[-1].nil?
+      seed_word = words[-1]
+      words << ( word_p[seed_word] ? next_word(seed_word, random_percent) : nil )
+    end
+    words[0..-2]
+  end
+
 end
 
-p output.join(' ')
+p TweetRegurgitator.new('tweets.csv').generate_tweet
