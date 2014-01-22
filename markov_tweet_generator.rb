@@ -44,7 +44,7 @@ class TweetRegurgitator
     word_freqs.each_value do |next_word_freqs|
         total = next_word_freqs.values.inject(:+)
         next_word_freqs.each_pair do |k,v|
-          next_word_freqs[k] = v.fdiv(total).round(3)
+          next_word_freqs[k] = v.fdiv(total)
         end
     end
   end
@@ -54,14 +54,14 @@ class TweetRegurgitator
   end
 
   def random_percent
-    rand(0..1.0).round(3)
+    rand(0..1.0)
   end
 
   def next_word(seed_word, goal_v, current_v=0)
     if word_p[seed_word]
       word_p[seed_word].select do |word,v|
-        current_v += v      
-        word if current_v >= goal_v #
+        current_v += v
+        word if current_v >= goal_v
       end.first.first
     end
   end
