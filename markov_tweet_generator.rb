@@ -43,10 +43,10 @@ class TweetRegurgitator
         next_word_freqs.each_pair do |k,v|
           next_word_freqs[k] = v.fdiv(total)
         end
-    end
+     end
   end
 
-  def random_word
+  def random_seed_word
     @word_p.keys.sample
   end
 
