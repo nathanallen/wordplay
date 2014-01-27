@@ -61,10 +61,13 @@ class TweetRegurgitator
     end.first.first
   end
 
-  def generate_tweet
-    tweet = chain_together_words(random_word)
+  def generate_tweets(n=1)
+    n.times.map do
+      words = chain_together_words(random_seed_word)
+      format(words)
+    end
   end
-
+ 
   def chain_together_words(*words)
     until words[-1].nil?
       seed_word = words[-1]
@@ -73,6 +76,13 @@ class TweetRegurgitator
     words[0..-2]
   end
 
+  def format(words)
+    tweet = words.join(' ').slice(0,140)
+  end
+
 end
 
-p TweetRegurgitator.new('tweets.csv').generate_tweet
+#Driver Code
+n = ARGV[0] ? ARGV[0].to_i : 5
+tweets = TweetRegurgitator.new('tweets.csv').generate_tweets(n)
+tweets.each{|t| p t}
