@@ -1,36 +1,56 @@
-WORD_PATTERN = /[\w\-\']+/
+class NgramFinder
 
-def count_ngrams(words_array, n = 3)
-  stop_index = words_array.length - n+1
-  offset = n-1
-  ngram_freqs = Hash.new(0)
+  attr_reader :ngram_freqs
 
-  words_array.each_index do |i|
-    unless i >= stop_index
-      ngram = words_array[i..i+offset].join(' ')
+  def initialize(file)
+    @word_pattern = /[\w\-\']+/
+    @words_array = extract_words(file)
+    @ngram_freqs = Hash.new(0)
+  end
+
+  def find_ngrams(n=3)
+    limits = set_bounds(n)
+    count_ngrams(*limits)
+    ngram_freqs
+  end
+
+  def find_and_sort_ngrams_by_frequency(n=3)
+    find_ngrams(n).sort_by {|k, v| v}.reverse
+  end
+
+  private
+
+  def extract_words(file)
+    File.read(file).scan(@word_pattern)
+  end
+
+  def set_bounds(n)
+    stop_index = @words_array.length - n+1
+    offset = n-1
+    [stop_index, offset]
+  end
+
+  def count_ngrams(stop_index, offset)
+    stop_index.times do |i|
+      ngram = @words_array[i..i+offset].join(' ')
       ngram_freqs[ngram] += 1
     end
   end
 
-  ngram_freqs
 end
 
-def extract_words(file)
-  File.read(file).scan(WORD_PATTERN)
-end
 
 #Driver Code
-
-file = ARGV[0] || 'input.txt'
-words_array = extract_words(file)
+file = ARGV[0] || 'sample/input.txt'
+ngram_finder = NgramFinder.new(file)
 
 if ARGV[1]
   number_of_sequential_words = ARGV[1].to_i
-  ngram_frequencies = count_ngrams(words_array, number_of_sequential_words)
+  ngram_frequencies = ngram_finder.find_and_sort_ngrams_by_frequency(number_of_sequential_words)
 else
-  ngram_frequencies = count_ngrams(words_array)
+  ngram_frequencies = ngram_finder.find_and_sort_ngrams_by_frequency
 end
 
-top_ten_ngrams = ngram_frequencies.sort_by {|k, v| v}.reverse.take(10)
+top_ten_ngrams = ngram_frequencies.take(10)
 
 p top_ten_ngrams
