@@ -29,12 +29,9 @@ class TweetRegurgitator
   end
 
   def update_word_frequency(current_word, next_word)
-    if word_freqs[current_word]
-      if word_freqs[current_word][next_word]
-        word_freqs[current_word][next_word] += 1
-      else
-        word_freqs[current_word][next_word] = 1
-      end
+    nest_hash = word_freqs[current_word]
+    if nest_hash && nest_hash[next_word]
+      word_freqs[current_word][next_word] += 1
     else
       word_freqs[current_word] = {next_word => 1}
     end
