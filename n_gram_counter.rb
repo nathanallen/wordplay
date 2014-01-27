@@ -44,13 +44,9 @@ end
 file = ARGV[0] || 'sample/input.txt'
 ngram_finder = NgramFinder.new(file)
 
-if ARGV[1]
-  number_of_sequential_words = ARGV[1].to_i
-  ngram_frequencies = ngram_finder.find_and_sort_ngrams_by_frequency(number_of_sequential_words)
-else
-  ngram_frequencies = ngram_finder.find_and_sort_ngrams_by_frequency
-end
-
-top_ten_ngrams = ngram_frequencies.take(10)
-
-p top_ten_ngrams
+p top_ten = if ARGV[1]
+              ngram_length = ARGV[1].to_i
+              ngram_finder.find_and_sort_ngrams_by_frequency(ngram_length)
+            else
+              ngram_finder.find_and_sort_ngrams_by_frequency
+            end.take(10)
