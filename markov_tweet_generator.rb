@@ -69,7 +69,7 @@ class TweetRegurgitator
   end
  
   def chain_together_words(*words)
-    until words[-1].nil?
+    until words[-1].nil? || words.length == 23 # assumes average word length of 5 characters
       seed_word = words[-1]
       words << ( word_p[seed_word] ? next_word(seed_word, random_percent) : nil )
     end
