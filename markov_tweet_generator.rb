@@ -55,12 +55,10 @@ class TweetRegurgitator
   end
 
   def next_word(seed_word, goal_v, current_v=0)
-    if word_p[seed_word]
-      word_p[seed_word].select do |word,v|
-        current_v += v
-        word if current_v >= goal_v
-      end.first.first
-    end
+    word_p[seed_word].take_while do |word_prob|
+      current_v += word_prob.last
+      current_v >= goal_v
+    end.first.first
   end
 
   def generate_tweet
